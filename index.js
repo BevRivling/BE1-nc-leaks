@@ -1,3 +1,7 @@
+#!/usr/bin/env node
+
+const [, , info] = process.argv;
+
 // Requires
 const http = require("http");
 const fs = require("fs");
@@ -28,10 +32,15 @@ const req = http.request(options, response => {
       return acc;
     }, []);
 
-    //Get interests
-    getInfo(ncUsernames, "interests");
-    //Get pets
-    getInfo(ncUsernames, "pets");
+    if (info === "interests") {
+      //Get interests
+      getInfo(ncUsernames, "interests");
+    } else if (info === "pets") {
+      //Get pets
+      getInfo(ncUsernames, "pets");
+    } else {
+      console.log("please state interests or pets");
+    }
   });
   response.on("error", error => {
     console.error(error);
