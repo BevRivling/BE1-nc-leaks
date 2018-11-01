@@ -27,46 +27,45 @@ const req = http.request(options, response => {
       return acc;
     }, []);
 
-    // Request user interests
-    let bodyInterests = [];
-    let counter = 0;
-
-    // INTERESTS FROM HERE
-    ncUsernames.forEach(user => {
-      let userInt = "";
-      const userOptions = {
-        hostname: "nc-leaks.herokuapp.com",
-        path: `/api/people/${user}/interests`,
-        method: "GET"
-      };
-
-      const userReq = http.request(userOptions, response => {
-        response.on("data", data => {
-          userInt += data;
-        });
-
-        response.on("end", () => {
-          counter++;
-          bodyInterests.push(JSON.parse(userInt));
-          if (counter === ncUsernames.length) {
-            fs.writeFile(
-              "ncInterests.json",
-              JSON.stringify(bodyInterests),
-              () => {}
-            );
-          }
-        });
-      });
-      userReq.end();
-    });
-
-    // TO HERE
-
-    // console.log(ncUsernames[0]);
+    getInfo(ncUsernames, "interests");
   });
   response.on("error", error => {
     console.error(error);
   });
 });
+
+const getInfo = (usernamesArr, info) => {
+  let bodyInterests = [];
+  let counter = 0;
+
+  usernamesArr.forEach(user => {
+    let userInt = "";
+    const userOptions = {
+      hostname: "nc-leaks.herokuapp.com",
+      path: `/api/people/${user}/${info}`,
+      method: "GET"
+    };
+
+    const userReq = http.request(userOptions, response => {
+      response.on("data", data => {
+        userInt += data;
+      });
+
+      response.on("end", () => {
+        counter++;
+        bodyInterests.push(JSON.parse(userInt));
+        if (counter === usernamesArr.length) {
+          console.log(bodyInterests);
+          fs.writeFile(
+            `nc-${info}.json`,
+            JSON.stringify(bodyInterests),
+            () => {}
+          );
+        }
+      });
+    });
+    userReq.end();
+  });
+};
 
 req.end();
