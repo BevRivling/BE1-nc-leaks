@@ -31,6 +31,7 @@ const req = http.request(options, response => {
     let bodyInterests = [];
     let counter = 0;
 
+    // INTERESTS FROM HERE
     ncUsernames.forEach(user => {
       let userInt = "";
       const userOptions = {
@@ -58,6 +59,10 @@ const req = http.request(options, response => {
       });
       userReq.end();
     });
+
+    // TO HERE
+
+    // console.log(ncUsernames[0]);
   });
   response.on("error", error => {
     console.error(error);
