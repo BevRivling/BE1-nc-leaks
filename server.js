@@ -2,7 +2,9 @@ const http = require("http");
 const {
   getNorthcoders,
   getSingleNorthcoder,
-  getPet
+  getInfo
+  // getPet,
+  // getInterests
 } = require("./controllers/controller.js");
 
 const server = http.createServer((request, response) => {
@@ -11,15 +13,18 @@ const server = http.createServer((request, response) => {
   if (method === "GET") {
     const ncUser = /\/api\/northcoders\/[\w]+$/;
     const ncPets = /\/api\/pets\/[\w]+$/;
-    const [northcoder] = url.match(/[\w]+$/g);
+    const ncInterests = /\/api\/interests\/[\w]+$/;
+    const [northcoder] = /[\w]+$/g.test(url) ? url.match(/[\w]+$/g) : [];
 
     if (url === "/api/northcoders") getNorthcoders(request, response);
     if (ncUser.test(url)) {
       getSingleNorthcoder(request, response, northcoder);
     }
     if (ncPets.test(url)) {
-      getPet(request, response, northcoder);
+      getInfo(request, response, northcoder, "pets");
     }
+    if (ncInterests.test(url))
+      getInfo(request, response, northcoder, "interests");
   }
 });
 
