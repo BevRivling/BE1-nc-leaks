@@ -32,3 +32,16 @@ exports.getSingleNorthcoder = (req, res, northcoder) => {
     res.end();
   });
 };
+
+exports.getPet = (req, res, northcoder) => {
+  fs.readFile("./nc-pets.json", "utf8", (err, ncstr) => {
+    const test = JSON.parse(ncstr);
+    const ncEmp = JSON.parse(ncstr)
+      .filter(nc => nc.person)
+      .filter(nc => nc.person.username === northcoder);
+
+    res.write(JSON.stringify(ncEmp));
+
+    res.end();
+  });
+};

@@ -1,18 +1,24 @@
 const http = require("http");
 const {
   getNorthcoders,
-  getSingleNorthcoder
+  getSingleNorthcoder,
+  getPet
 } = require("./controllers/controller.js");
 
 const server = http.createServer((request, response) => {
   const { url, method } = request;
   response.setHeader("Content-Type", "text/json");
   if (method === "GET") {
-    const ncReg = /\/api\/northcoders\/[A-z]+$/;
+    const ncUser = /\/api\/northcoders\/[\w]+$/;
+    const ncPets = /\/api\/pets\/[\w]+$/;
+    const [northcoder] = url.match(/[\w]+$/g);
+
     if (url === "/api/northcoders") getNorthcoders(request, response);
-    if (ncReg.test(url)) {
-      const [northcoder] = url.match(/[A-z]+$/g);
+    if (ncUser.test(url)) {
       getSingleNorthcoder(request, response, northcoder);
+    }
+    if (ncPets.test(url)) {
+      getPet(request, response, northcoder);
     }
   }
 });
